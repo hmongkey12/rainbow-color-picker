@@ -18,14 +18,8 @@ if (input != null) {
   const initialColor = 0xff0000;
   const red = initialColor.toString(16).toUpperCase();
 
-  //shifts 0xFF0000 by 8 bits to the right, so it becomes 0x00FF0,
-  //each hex number is 4 bits, so i shift 1 byte, padStart adds in leading zeros
-  //for up to 6 numbers, because the zero gets removed otherwise
   const green = (initialColor >> 8).toString(16).padStart(6, 0).toUpperCase();
   const blue = (initialColor >> 16).toString(16).padStart(6, 0).toUpperCase();
-
-  //Initial Color, red, is mixed with green to produce yellow.  The logical OR operator
-  //is used to mask green and red hex values
   const yellow = (initialColor | parseInt(green, 16))
     .toString(16)
     .padStart(6, 0)
@@ -47,12 +41,18 @@ if (input != null) {
       rainbowMap.get(input.toLowerCase())
     );
   } else if (input.toLowerCase() == "random") {
-    const randomColor = randomColors.map(() => {
-      return Math.ceil(Math.random() * 256).toString(16);
-    });
-    alert("#".concat(randomColor.join("")).toUpperCase());
+    const experimenting = randomColors.reduce((prev) => {
+      return (prev << 8) | Math.ceil(Math.random() * 256);
+    }, 0xffffff);
+
+    alert(
+      "#"
+        .concat(Math.abs(experimenting).toString(16).padStart(6, 0))
+        .toUpperCase()
+    );
+
     document.body.style.background = "#".concat(
-      randomColor.join("").toLowerCase()
+      Math.abs(experimenting).toString(16).padStart(6, 0)
     );
   } else {
     alert("Not a rainbow color");
